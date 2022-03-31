@@ -1,0 +1,30 @@
+version: '3'
+services:
+  database:
+    image: mariadb:10.6.5-focal
+    environment:
+      MARIADB_USER: document
+      MARIADB_PASSWORD: root
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: false
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_RANDOM_ROOT_PASSWORD: no
+      MARIADB_DATABASE: docroot
+    ports: ['3306']
+  php-fpm:
+    build:
+      context: ./php-fpm
+    volumes:
+      - ../documentroot:/var/www/documentroot
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ../documentroot:/var/www/documentroot
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites/:/etc/nginx/sites-available
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+      - "443:443"
