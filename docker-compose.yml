@@ -10,6 +10,8 @@ services:
       MARIADB_RANDOM_ROOT_PASSWORD: no
       MARIADB_DATABASE: docroot
     ports: ['3306']
+    volumes:
+      - '/Users/loic/mariadb:/var/lib/mysql/'
   php-fpm:
     build:
       context: ./php-fpm
